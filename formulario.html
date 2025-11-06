@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Flask - PostgreSQL</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <h2>Formulario de Registro</h2>
+    <form action="/enviar" method="POST">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required><br>
+
+        <label>Apellido:</label>
+        <input type="text" name="apellido" required><br>
+
+        <label>Dirección:</label>
+        <input type="text" name="direccion"><br>
+
+        <label>Teléfono:</label>
+        <input type="text" name="telefono"><br>
+
+        <label>Correo electrónico:</label>
+        <input type="email" name="correo"><br>
+
+        <label>Mensaje:</label>
+        <textarea name="mensaje" rows="4" cols="30"></textarea><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
