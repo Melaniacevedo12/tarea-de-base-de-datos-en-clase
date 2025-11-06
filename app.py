@@ -1,25 +1,14 @@
-from flask import Flask, request,jasonify , sang_filet 
-import pgsycopg2 
-from pgsycopg2.extras import RealDictCursor
-import os
-from dotenv import load_dotenv
+from flask import Flask, request, render_template
+import psycopg2
+
 app = Flask(__name__)
 
-conexion = psycopg2.connect(
-            host="localhost", 
-            database="FORMULARIO", # nombre de la base de datos
-            user="postgres123", # el usuario por defecto
-            password="123456" # la contraseña
-        )
+# Ruta principal que muestra el formulario
+@app.route('/')
+def index():
+    return render_template('formulario.html')
 
-
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part in the request'}), 400
-
-    file = request.files['file']
-
+# Ruta que recibe los datos del formulario
 @app.route('/enviar', methods=['POST'])
 def enviar():
     nombre = request.form['nombre']
@@ -30,9 +19,16 @@ def enviar():
     mensaje = request.form['mensaje']
 
     try:
+        # Conectar a PostgreSQL
         conexion = psycopg2.connect(
-            host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASS
+            host="localhost",
+            database="FORMULARIO",
+            user="postgres123",
+            password="123456"
         )
+        # Forzar codificación UTF-8 para aceptar tildes y ñ
+        conexion.set_client_encoding('UTF8')
+
         cursor = conexion.cursor()
         cursor.execute("""
             INSERT INTO mensajes (nombre, apellido, direccion, telefono, correo, mensaje)
@@ -41,7 +37,9 @@ def enviar():
         conexion.commit()
         cursor.close()
         conexion.close()
+
         return "<h3>✅ Datos guardados correctamente en la base de datos.</h3>"
+
     except Exception as e:
         return f"<h3>❌ Error al guardar los datos: {e}</h3>"
 
